@@ -1,34 +1,92 @@
 # Product Requirement Document (PRD)
 
-## Product Overview
-A secure AI-powered chatbot that answers user queries professionally, enforces safety guardrails, and outputs structured JSON responses.
+## Product Name
+**SecureBot** – AI-Powered Secure Company Chatbot
 
-## Goals
-- Understand user queries.
-- Reject unsafe or harmful requests.
-- Protect against prompt injection.
-- Return responses in the JSON format:
-  - `{"intent": "", "risk_level": "", "response": ""}`
+## Version
+1.0.0
 
-## Key Features
-- Advanced prompting with a secure system prompt.
-- Internal chain-of-thought reasoning.
-- ReAct-style flow: Thought → Action → Observation → Final Answer.
-- Prompt chaining through separate safety, intent, response, and formatting stages.
-- Custom AI safety guardrails.
-- Flask API endpoint for chat requests.
+## Date
+2026-05-28
 
-## User Stories
-- As a user, I can submit a question and receive a professional answer.
-- As a product owner, I can ensure harmful or unsafe requests are rejected.
-- As a developer, I can inspect guardrails and output formatting clearly.
+---
 
-## Constraints
-- Must not expose sensitive information.
-- Must always respond with structured JSON.
-- Must use OOP design and PEP 8 conventions.
+## 1. Product Overview
+SecureBot is a secure, AI-powered chatbot designed for professional enterprise environments.
+It answers user queries intelligently while strictly enforcing AI safety guardrails,
+resisting prompt injection attacks, and always returning structured JSON responses.
 
-## Success Metrics
-- Correct JSON format returned for every request.
-- High-risk and unsafe queries are rejected safely.
-- Users receive a professional, guarded answer for valid queries.
+---
+
+## 2. Problem Statement
+Modern AI chatbots are vulnerable to prompt injection, unsafe query exploitation,
+and unintended data leakage. Organizations need a chatbot that is both helpful and
+robust against misuse.
+
+---
+
+## 3. Goals & Objectives
+- Understand and respond to user queries professionally.
+- Reject unsafe, harmful, or policy-violating requests.
+- Protect against prompt injection and adversarial inputs.
+- Always return responses in a consistent, parseable JSON structure.
+- Follow modern AI Engineering best practices.
+
+---
+
+## 4. Target Users
+| User Role        | Description                                      |
+|------------------|--------------------------------------------------|
+| End User         | Employees querying the company assistant         |
+| Developer        | Engineers integrating or extending the chatbot   |
+| Security Officer | Staff auditing safety and guardrail effectiveness|
+
+---
+
+## 5. Key Features
+| Feature                   | Description                                                              |
+|---------------------------|--------------------------------------------------------------------------|
+| Secure System Prompt      | Instructs the assistant to never reveal secrets and respond professionally|
+| Chain-of-Thought (CoT)    | Internal step-by-step reasoning before producing a final answer          |
+| ReAct Framework           | Thought → Action → Observation → Final Answer flow                       |
+| Prompt Chaining           | Safety Check → Intent Detection → Response Generation → JSON Formatting  |
+| Structured Output         | Always returns `{"intent": "", "risk_level": "", "response": ""}`        |
+| AI Safety Guardrails      | Blocked keywords, unsafe pattern detection, prompt injection resistance  |
+| Sensitive Response Filter | Prevents leakage of passwords, SSNs, credit card data in output          |
+| REST API                  | Flask-based `POST /chat` endpoint for integration                        |
+
+---
+
+## 6. User Stories
+- As a **user**, I can send a question and receive a professional, safe JSON response.
+- As a **user**, I expect the bot to politely refuse harmful or unsafe requests.
+- As a **developer**, I can inspect the `intent` and `risk_level` fields to audit bot behavior.
+- As a **security officer**, I can trust that blocked keywords and injection attempts are always rejected.
+- As a **product owner**, I can ensure structured output is always enforced.
+
+---
+
+## 7. Constraints
+- Must not expose any sensitive or confidential company information.
+- Must always respond with valid JSON containing `intent`, `risk_level`, and `response`.
+- Must use OOP design patterns and follow PEP 8 coding standards.
+- Must run on Python 3.10+ with Flask as the web framework.
+
+---
+
+## 8. Success Metrics
+| Metric                                | Target       |
+|---------------------------------------|--------------|
+| Valid JSON returned per request       | 100%         |
+| High-risk queries correctly rejected  | 100%         |
+| Prompt injection attempts blocked     | 100%         |
+| API response time (local)             | < 200ms      |
+| PEP 8 compliance                      | 100%         |
+
+---
+
+## 9. Out of Scope (v1.0)
+- Integration with live LLM APIs (GPT, Gemini, Anthropic).
+- User authentication and session management.
+- Database storage of conversation history.
+- Multi-language support.
