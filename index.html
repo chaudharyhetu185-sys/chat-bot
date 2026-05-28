@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Pulse AI — A smart, realistic chatbot powered by OpenAI or an advanced logic engine." />
+  <title>Pulse AI · Smart Chat Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="app" id="app">
+
+  <!-- ─────────────── SETTINGS PANEL ─────────────── -->
+  <div class="settings-panel hidden" id="settingsPanel">
+    <div class="settings-card">
+      <div class="settings-header">
+        <h2>⚙️ Settings</h2>
+        <button class="close-btn" id="closeSettings" aria-label="Close settings">✕</button>
+      </div>
+
+      <div class="setting-group">
+        <label for="apiKeyInput">OpenAI API Key</label>
+        <div class="api-key-wrap">
+          <input type="password" id="apiKeyInput" placeholder="sk-..." autocomplete="off" spellcheck="false" />
+          <button id="toggleKey" class="toggle-key-btn" aria-label="Show/hide key">👁</button>
+        </div>
+        <p class="setting-hint">Paste your <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">OpenAI API key</a> to use GPT-powered responses. Leave blank to use the built-in smart engine.</p>
+      </div>
+
+      <div class="setting-group">
+        <label for="modelSelect">GPT Model</label>
+        <select id="modelSelect">
+          <option value="gpt-3.5-turbo">GPT-3.5 Turbo (faster, cheaper)</option>
+          <option value="gpt-4o-mini" selected>GPT-4o Mini (recommended)</option>
+          <option value="gpt-4o">GPT-4o (most capable)</option>
+        </select>
+      </div>
+
+      <div class="setting-group">
+        <label for="personaInput">Bot Persona / System Prompt</label>
+        <textarea id="personaInput" rows="3" placeholder="You are a helpful, friendly assistant...">You are Pulse, a smart and helpful AI assistant. Respond naturally, concisely, and accurately. Be friendly but professional.</textarea>
+        <p class="setting-hint">This sets the personality and behavior of the bot.</p>
+      </div>
+
+      <div class="settings-footer">
+        <button class="save-btn" id="saveSettings">Save Settings</button>
+        <span class="save-status" id="saveStatus"></span>
+      </div>
+    </div>
+  </div>
+  <div class="settings-overlay hidden" id="settingsOverlay"></div>
+
+  <!-- ─────────────── HEADER ─────────────── -->
+  <header class="header">
+    <div class="header-left">
+      <div class="bot-logo">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.38-1 1.73V7h3a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3v-8a3 3 0 0 1 3-3h3V5.73A2 2 0 0 1 10 4a2 2 0 0 1 2-2z"/>
+          <circle cx="9" cy="13" r="1" fill="currentColor" stroke="none"/>
+          <circle cx="15" cy="13" r="1" fill="currentColor" stroke="none"/>
+          <path d="M9 17c.83.67 1.5 1 3 1s2.17-.33 3-1"/>
+          <line x1="6" y1="11" x2="4" y2="11" stroke-linecap="round"/>
+          <line x1="18" y1="11" x2="20" y2="11" stroke-linecap="round"/>
+        </svg>
+        <span class="pulse-ring"></span>
+      </div>
+      <div>
+        <p class="bot-name">Pulse <span class="ai-tag">AI</span></p>
+        <p class="bot-sub" id="botSub">
+          <span class="dot-live"></span>
+          <span id="statusText">Smart Assistant · Online</span>
+        </p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="api-badge" id="apiBadge" title="Engine mode">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+        <span id="badgeLabel">Smart Engine</span>
+      </div>
+      <button class="hdr-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle dark/light mode">
+        <svg id="themeIcon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+        </svg>
+      </button>
+      <button class="hdr-btn" id="settingsBtn" aria-label="Settings" title="Settings">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
+      <button class="hdr-btn" id="clearBtn" aria-label="Clear chat" title="Clear chat">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+          <path d="M10 11v6M14 11v6M9 6V4h6v2"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ─────────────── CHAT AREA ─────────────── -->
+  <main class="chat-area" id="chatArea" role="log" aria-live="polite" aria-label="Chat messages">
+
+    <!-- Welcome / Empty State -->
+    <div class="empty-state" id="emptyState">
+      <div class="empty-logo">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.38-1 1.73V7h3a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3v-8a3 3 0 0 1 3-3h3V5.73A2 2 0 0 1 10 4a2 2 0 0 1 2-2z"/>
+          <circle cx="9" cy="13" r="1" fill="currentColor" stroke="none"/>
+          <circle cx="15" cy="13" r="1" fill="currentColor" stroke="none"/>
+          <path d="M9 17c.83.67 1.5 1 3 1s2.17-.33 3-1"/>
+        </svg>
+      </div>
+      <h2>How can I help you?</h2>
+      <p>Ask me anything — science, math, history, coding, language, or just have a conversation.</p>
+      <div class="starter-grid" id="starterGrid">
+        <button class="starter" data-q="Explain how black holes are formed">🌑 How are black holes formed?</button>
+        <button class="starter" data-q="What is the difference between machine learning and deep learning?">🤖 ML vs Deep Learning?</button>
+        <button class="starter" data-q="Write a Python function to find prime numbers">🐍 Python: prime numbers</button>
+        <button class="starter" data-q="Explain the causes of World War 1">📜 Causes of World War 1</button>
+        <button class="starter" data-q="What is the speed of light and why is it important?">💡 Speed of light?</button>
+        <button class="starter" data-q="How does the human immune system work?">🧬 Human immune system</button>
+      </div>
+    </div>
+
+    <!-- Message list -->
+    <div class="msg-list" id="msgList"></div>
+
+    <!-- Typing indicator -->
+    <div class="typing-wrap hidden" id="typingWrap">
+      <div class="t-avatar">P</div>
+      <div class="typing-dots">
+        <span></span><span></span><span></span>
+      </div>
+      <span class="typing-label">Pulse is thinking…</span>
+    </div>
+
+  </main>
+
+  <!-- ─────────────── INPUT BAR ─────────────── -->
+  <div class="input-bar" id="inputBar">
+    <div class="input-box" id="inputBox">
+      <textarea
+        id="msgInput"
+        class="msg-textarea"
+        placeholder="Ask me anything…"
+        rows="1"
+        aria-label="Message input"
+        autocomplete="off"
+        spellcheck="true"
+      ></textarea>
+      <div class="input-actions">
+        <span class="char-count" id="charCount">0</span>
+        <button class="send-btn" id="sendBtn" aria-label="Send" disabled>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2" fill="currentColor" stroke="none"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <p class="disclaimer">Pulse AI can make mistakes. Verify critical information.</p>
+  </div>
+
+</div><!-- /.app -->
+
+<script src="script.js"></script>
+</body>
+</html>
