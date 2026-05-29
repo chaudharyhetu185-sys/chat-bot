@@ -351,6 +351,9 @@ async function checkServer() {
 function init() {
   loadTheme();
 
+  // Ensure send button state matches current input (call once on init)
+  handleInput();
+
   // Input
   D.msgInput.addEventListener('input',   handleInput);
   D.msgInput.addEventListener('keydown', (e) => {

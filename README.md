@@ -109,3 +109,25 @@ Go to: **http://localhost:3000**
 | `401 Unauthorized` | Your API key is invalid or expired |
 | `429 Rate limit` | Wait a moment and try again |
 | Port 3000 in use | Change `PORT=3001` in `.env` |
+
+---
+
+## Quick Example
+
+This repository loads secrets from `.env` using `dotenv` (loaded in `server.js` and the example below).
+
+1. Make sure your `.env` contains your API key (do NOT commit this file):
+
+```env
+OPENAI_API_KEY=YOUR_API_KEY_HERE
+OPENAI_MODEL=gpt-4o-mini
+```
+
+2. Run the simple example that demonstrates loading the key and making a request:
+
+```bash
+node examples/example_request.js
+```
+
+The example script prints the model reply or logs clear errors if the key is missing/invalid.
+
