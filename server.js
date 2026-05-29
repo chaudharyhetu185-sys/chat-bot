@@ -36,7 +36,7 @@ if (!API_KEY) {
 
 const FALLBACK_MODELS = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemma-4-31b-it'];
 const SUPPORTED_MODELS = new Set(FALLBACK_MODELS);
-const DEFAULT_MODEL = 'gemini-2.0-flash';
+const DEFAULT_MODEL = 'gemma-4-31b-it';
 let MODEL = (process.env.GEMINI_MODEL || '').trim() || DEFAULT_MODEL;
 if (!SUPPORTED_MODELS.has(MODEL)) {
   console.warn(`\n⚠️ GEMINI_MODEL "${MODEL}" is not supported. Falling back to ${DEFAULT_MODEL}.\n`);
